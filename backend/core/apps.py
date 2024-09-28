@@ -10,7 +10,6 @@ DEFAULT_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
-    'debug_toolbar',
     'django_cron',
     'django_rq',
 ]
@@ -18,8 +17,9 @@ THIRD_PARTY_APPS = [
 CUSTOM_APPS = [
     'admin_app.apps.AdminAppConfig',
     'communications_app.apps.CommunicationsAppConfig',
+    'employment_app.apps.EmploymentAppConfig',
     'job_handler_app.apps.JobHandlerAppConfig',
     'middleware_app.apps.MiddlewareAppConfig',
-    'post_app.apps.PostAppConfig',
+    'retaurant_app.apps.RestaurantAppConfig',
     'user_app.apps.UserAppConfig'
 ]

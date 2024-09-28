@@ -17,7 +17,7 @@ def enqueue_job(func: Callable, job_q: str = JobQ.DEFAULT_Q, is_async: bool = Tr
     Enqueue a job to Redis queue.
     """
     if job_q not in JobQ.ALL_QS:
-        logger.warn(f"job_q must be one of {JobQ.ALL_QS}")
+        logger.warning(f"job_q must be one of {JobQ.ALL_QS}")
         return None
     try:
         job = rq.Queue(name=job_q, connection=settings.REDIS_CONN,
@@ -34,10 +34,10 @@ def get_job(job_id: str = None, job_q: str = None) -> Job:
     Get details of a job.
     """
     if job_q not in JobQ.ALL_QS:
-        logger.warn(f"job_q must be one of {JobQ.ALL_QS}")
+        logger.warning(f"job_q must be one of {JobQ.ALL_QS}")
         return None
     if job_id is None or job_id == "":
-        logger.warn("job_id must be provided")
+        logger.warning("job_id must be provided")
         return None
     try:
         job = rq.Queue(
@@ -46,10 +46,10 @@ def get_job(job_id: str = None, job_q: str = None) -> Job:
         redis_logger.exception(f"Failed to fetch job {job_id} from {job_q} queue: {ex}")
         return None
     if job is None:
-        logger.warn(f"Job {job_id} not found in {job_q} queue")
+        logger.warning(f"Job {job_id} not found in {job_q} queue")
         job_db = EnqueuedJob.objects.filter(job_id=job_id).first()
         if not job_db:
-            logger.warn(f"Job {job_id} not found in DB")
+            logger.warning(f"Job {job_id} not found in DB")
             return None
         return EnqueuedJobSerializer(job_db).data
 
@@ -73,12 +73,12 @@ def register_job_in_db(job: Job = None):
 
         deserialized = EnqueuedJobSerializer(data=data)
         if not deserialized.is_valid():
-            logger.warn(f"Invalid data: {deserialized.errors}")
+            logger.warning(f"Invalid data: {deserialized.errors}")
             return
         
         deserialized.save()
     except Exception as ex:
-        logger.warn(f"Failed to register job {job.id} in DB: {ex}")
+        logger.warning(f"Failed to register job {job.id} in DB: {ex}")
 
     return None
 

@@ -10,7 +10,6 @@ DEFAULT_MIDDLEWARE = [
 
 THIRD_PARTY_MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 CUSTOM_MIDDLEWARE = [

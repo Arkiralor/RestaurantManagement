@@ -1,4 +1,4 @@
 #!/bin/bash
 python -m pip install pip-tools
-pip-compile --resolver=backtracking --output-file=dev-requirements.txt dev-requirements.in
-python -m pip install -r dev-requirements.txt
+pip-compile --resolver=backtracking --output-file=requirements.dev.txt requirements.dev.in
+python -m pip install -r requirements.dev.txt

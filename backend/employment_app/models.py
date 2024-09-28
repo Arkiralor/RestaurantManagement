@@ -22,7 +22,7 @@ class RestaurantEmployee(TemplateModel):
         if self.shift_days:
             self.shift_days = list(set(self.shift_days))
 
-        super(self, RestaurantEmployee).save(*args, **kwargs)
+        super(RestaurantEmployee, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Restaurant Branch Employee"
