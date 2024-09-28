@@ -44,7 +44,8 @@ class Restaurant(TemplateModel):
     established = models.IntegerField()
 
     def save(self, *args, **kwargs):
-
+        if not self.established:
+            self.established = self.created.year
         super(self, Restaurant).save(*args, **kwargs)
 
     class Meta:
@@ -174,7 +175,7 @@ class RestaurantOrderItem(TemplateModel):
         )
 
 
-class RestaurantOrrder(TemplateModel):
+class RestaurantOrder(TemplateModel):
     branch = models.ForeignKey(RestaurantBranch, on_delete=models.CASCADE) ## Yes, this breaks normalization, but we need it here for easier querrying.
     server = models.ForeignKey(RestaurantEmployee, on_delete=models.DO_NOTHING)
     items = models.ManyToManyField(RestaurantOrderItem)
@@ -192,7 +193,7 @@ class RestaurantOrrder(TemplateModel):
             no_discount_total = sum([item.total for item in self.items.all()])
             self.total = no_discount_total - (no_discount_total * (self.additional_discount_percentage/100))
 
-        super(RestaurantOrrder, self).save(*args, **kwargs)
+        super(RestaurantOrder, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Restaurant Order"
