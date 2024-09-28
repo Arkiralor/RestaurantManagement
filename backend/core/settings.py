@@ -3,6 +3,8 @@ from pathlib import Path
 import redis
 from os import path, makedirs, environ
 
+from django.db.backends.postgresql.psycopg_any import IsolationLevel
+
 from core.apps import DEFAULT_APPS, THIRD_PARTY_APPS, CUSTOM_APPS
 from core.cron_classes import JOB_HANDLER_APP_CRON, MIDDLEWARE_APP_CRON, USER_APP_CRON
 from core.middleware import DEFAULT_MIDDLEWARE, THIRD_PARTY_MIDDLEWARE, CUSTOM_MIDDLEWARE
@@ -13,13 +15,27 @@ SECRET_KEY = environ.get("SECRET_KEY", "t3mp0r4ry-s3cre4-k3y")
 
 DEBUG = eval(environ.get("DEBUG", "False"))
 if DEBUG:
-    import socket  # only if you haven't already imported this
+    import socket
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 ENV_TYPE = environ.get("ENV_TYPE", "PROD").lower()
 MAX_ITEMS_PER_PAGE = 15
 
 ALLOWED_HOSTS = environ.get("ALLOWED_HOSTS", "").split(", ")
+
+if ENV_TYPE == "dev":
+    THIRD_PARTY_APPS.extend(
+        [
+            "django_extensions",
+            "debug_toolbar"
+        ]
+    )
+
+    THIRD_PARTY_MIDDLEWARE.extend(
+        [
+            "debug_toolbar.middleware.DebugToolbarMiddleware",
+        ]
+    )
 
 INSTALLED_APPS = DEFAULT_APPS+THIRD_PARTY_APPS+CUSTOM_APPS
 MIDDLEWARE = DEFAULT_MIDDLEWARE+THIRD_PARTY_MIDDLEWARE+CUSTOM_MIDDLEWARE
@@ -58,7 +74,10 @@ DATABASES = {
         'HOST': environ['DB_HOST'],
         'PORT': environ['DB_PORT'],
         'USER': environ['DB_USER'],
-        'PASSWORD': environ['DB_PASSWORD']
+        'PASSWORD': environ['DB_PASSWORD'],
+        'OPTIONS': {
+            "isolation_level": IsolationLevel.SERIALIZABLE,
+        }
     }
 }
 

@@ -1,3 +1,5 @@
 -r requirements.in
 autopep8
+coverage
 django-debug-toolbar
+django-extensions

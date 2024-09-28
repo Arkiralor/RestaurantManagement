@@ -108,12 +108,10 @@ class UserProfile(TemplateModel):
             self.first_name = self.first_name.title()
         if self.last_name:
             self.last_name = self.last_name.title()
-        # if self.middle_name and len(self.middle_name) > 0:
-        #     for name in self.middle_name:
-        #         name = name.title()
+        if self.middle_name and len(self.middle_name) > 0:
+            for name in self.middle_name:
+                name = name.title()
         
-        self.middle_name = [name.title() for name in self.middle_name if self.middle_name]
-
         if self.date_of_birth:
             res = timezone.now().date() - self.date_of_birth
             self.age = res.days//365.25
@@ -217,6 +215,9 @@ class UserToken(TemplateModel):
 
 
 class UserTokenUsage(TemplateModel):
+    """
+    Model to record usage of authentication token by users.
+    """
     token = models.ForeignKey(UserToken, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
