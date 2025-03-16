@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str
     DEBUG: bool
-    ENV_TYPE:str
+    ENV_MODE:str
     JWT_ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
 

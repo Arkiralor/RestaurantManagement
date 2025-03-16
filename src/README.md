@@ -41,7 +41,7 @@ CONTACT_EMAIL = "Contact email for your application"
 ## System Settings:
 SECRET_KEY = "Secret key for site encryption (one-way)"
 DEBUG = True | False
-ENV_TYPE = "DEV" | "PROD" | "TEST" | "QA"
+ENV_MODE = "DEV" | "PROD" | "TEST" | "QA"
 ALLOWED_HOSTS = "host 1, host 2, host 3, host 4, ..."
 JWT_ALGORITHM = "HS256"
 CORS_ORIGIN_WHITELIST = "origin 1, origin 2, origin 3, origin 4, ..."

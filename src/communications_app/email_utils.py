@@ -13,7 +13,7 @@ from core.boilerplate.response_template import Resp
 from core.rq_constants import JobQ
 from core.settings import (APP_NAME, AWS_ACCESS_KEY_ID, AWS_REGION_NAME,
                            AWS_SECRET_ACCESS_KEY, CONTACT_EMAIL, DOMAIN_URL,
-                           ENV_TYPE, OWNER_EMAIL, SNS_SENDER_ID)
+                           ENV_MODE, OWNER_EMAIL, SNS_SENDER_ID)
 from job_handler_app.utils import enqueue_job
 from pytz import timezone
 from rest_framework import status
@@ -138,7 +138,7 @@ class SESEmailUtils:
         source = cls.CONTACT_EMAIL
 
         # prithoo: We don't actually want to send an email while testing in a development environment.
-        if ENV_TYPE.lower() == "dev":
+        if ENV_MODE.lower() == "dev":
             resp.message = "email sending simulated as DEV environment is set."
             resp.data = {
                 "email": {
@@ -221,7 +221,7 @@ class SESEmailUtils:
         source = cls.CONTACT_EMAIL
 
         # prithoo: We don't actually want to send an email while testing in a development environment.
-        if ENV_TYPE.lower() == "dev":
+        if ENV_MODE.lower() == "dev":
             resp.message = "email sending simulated as DEV environment is set."
             resp.data = {
                 "email": {

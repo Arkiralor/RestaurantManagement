@@ -2,7 +2,7 @@ import boto3
 from communications_app import logger
 from core.boilerplate.response_template import Resp
 from core.settings import (APP_NAME, AWS_ACCESS_KEY_ID, AWS_REGION_NAME,
-                           AWS_SECRET_ACCESS_KEY, DOMAIN_URL, ENV_TYPE,
+                           AWS_SECRET_ACCESS_KEY, DOMAIN_URL, ENV_MODE,
                            SNS_SENDER_ID)
 from django.utils import timezone
 from rest_framework import status
@@ -43,7 +43,7 @@ class SMSUtils:
 
         client = cls.get_client()
 
-        if ENV_TYPE.lower() == "dev":
+        if ENV_MODE.lower() == "dev":
             return True
 
         try:

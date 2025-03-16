@@ -13,7 +13,7 @@ class NetworkUtils:
 
     # (prithoo): Get these environment variable directly from the environment as the `settings` module would not have been loaded yet.
     DEBUG = getenv("DEBUG", "False")
-    ENV_TYPE = getenv("ENV_TYPE", "PROD").lower()
+    ENV_MODE = getenv("ENV_MODE", "PROD").lower()
     SAFE_ENV: str = "dev"
 
     @classmethod
@@ -39,9 +39,9 @@ class NetworkUtils:
         """
         Edits the ALLOWED_HOSTS environment variable to add the current machine's LOCAL IP address.
         """
-        if not cls.DEBUG and not cls.ENV_TYPE == cls.SAFE_ENV:
+        if not cls.DEBUG and not cls.ENV_MODE == cls.SAFE_ENV:
             logger.info(
-                f"ENVIRONMENT TYPE: {cls.ENV_TYPE}; DEBUG: {cls.DEBUG}")
+                f"ENVIRONMENT TYPE: {cls.ENV_MODE}; DEBUG: {cls.DEBUG}")
             logger.warning("This script is only for development purposes.")
             return False
         try:

@@ -367,7 +367,7 @@ class UserModelHelpers:
             resp.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
             return resp
 
-        if settings.ENV_TYPE == "dev":
+        if settings.ENV_MODE == "dev":
             resp.message = f"Sending OTP in `Response` as this is a development environment."
             resp.data = {
                 "otp": otp,

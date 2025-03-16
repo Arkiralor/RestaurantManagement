@@ -20,6 +20,6 @@ CUSTOM_APPS = [
     'employment_app.apps.EmploymentAppConfig',
     'job_handler_app.apps.JobHandlerAppConfig',
     'middleware_app.apps.MiddlewareAppConfig',
-    'retaurant_app.apps.RestaurantAppConfig',
+    'restaurant_app.apps.RestaurantAppConfig',
     'user_app.apps.UserAppConfig'
 ]
