@@ -17,13 +17,14 @@ DEBUG = eval(environ.get("DEBUG", "False"))
 if DEBUG:
     import socket
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
-ENV_TYPE = environ.get("ENV_TYPE", "PROD").lower()
+    INTERNAL_IPS = [
+        ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+ENV_MODE = environ.get("ENV_MODE", "PROD").lower()
 MAX_ITEMS_PER_PAGE = 15
 
 ALLOWED_HOSTS = environ.get("ALLOWED_HOSTS", "").split(", ")
 
-if ENV_TYPE == "dev":
+if ENV_MODE == "dev":
     THIRD_PARTY_APPS.extend(
         [
             "django_extensions",
@@ -93,13 +94,15 @@ if USE_REDIS:
     REDIS_HOST = environ.get("REDIS_HOST", "localhost")
     REDIS_PORT = int(environ.get("REDIS_PORT", 6379))
     REDIS_DB = int(environ.get("REDIS_DB", 0))
+    REDIS_USER = None
     REDIS_PASSWORD = None
 
-    REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
+    REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}" if ((not REDIS_PASSWORD) and (((not REDIS_DB) and (
+        not REDIS_USER)) or REDIS_DB == 0)) else f"redis://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
     REDIS_CONN = redis.Redis.from_url(REDIS_URL)
 
     RQ_QUEUES = {
-        q: {'HOST': REDIS_HOST,'PORT': REDIS_PORT,'DB': REDIS_DB,'PASSWORD': REDIS_PASSWORD,'DEFAULT_TIMEOUT': 480} for q in JobQ.ALL_QS
+        q: {'HOST': REDIS_HOST, 'PORT': REDIS_PORT, 'DB': REDIS_DB, 'PASSWORD': REDIS_PASSWORD, 'DEFAULT_TIMEOUT': 480} for q in JobQ.ALL_QS
     }
 
 CRON_ENABLED = eval(environ.get("CRON_ENABLED", "True"))
@@ -133,24 +136,24 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    ## prithoo: No, we do not want to update the `last_login` of the user if they just refresh their tokens.
-    'UPDATE_LAST_LOGIN': False, 
-    ## prithoo: We WANT this to break if it cannot find the algorithm.
+    # prithoo: No, we do not want to update the `last_login` of the user if they just refresh their tokens.
+    'UPDATE_LAST_LOGIN': False,
+    # prithoo: We WANT this to break if it cannot find the algorithm.
     'ALGORITHM': environ['JWT_ALGORITHM'],
     'SIGNING_KEY': SECRET_KEY,
 }
 
-if ENV_TYPE == "dev":
+if ENV_MODE == "dev":
     SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"] = timedelta(hours=8)
     SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"] = timedelta(days=15)
 
 
-## Create directory for logs
+# Create directory for logs
 LOG_DIR = path.join(BASE_DIR.parent, 'logs/')
 if not path.exists(LOG_DIR):
     makedirs(LOG_DIR)
 
-ENV_LOG_FILE = path.join(LOG_DIR, f'{ENV_TYPE}_root.log')
+ENV_LOG_FILE = path.join(LOG_DIR, f'{ENV_MODE}_root.log')
 DJANGO_LOG_FILE = path.join(LOG_DIR, 'django.log')
 
 LOGGING = {
@@ -181,7 +184,7 @@ LOGGING = {
     'loggers': {
         'root': {
             'handlers': [
-                'console', 
+                'console',
                 'root_file'
             ],
             "level": 'INFO'
@@ -197,7 +200,7 @@ TIME_ZONE = environ.get("TIME_ZONE", "utc")
 USE_I18N = eval(environ.get("USE_I18N", "True"))
 USE_TZ = eval(environ.get("USE_TZ", "True"))
 
-#(prithoo): Salt sizes used in determining the user part in the permanent token;
+# (prithoo): Salt sizes used in determining the user part in the permanent token;
 #           Looked cleaner when decalred in the `conf` module of the project.
 SALT_01_SIZE = int(environ.get('SALT_01_SIZE', 4))
 SALT_02_SIZE = int(environ.get('SALT_02_SIZE', 6))
