@@ -31,4 +31,19 @@ class RestaurantAdmin(admin.ModelAdmin):
 
 @admin.register(RestaurantBranch)
 class RestaurantBranchAdmin(admin.ModelAdmin):
-    list_display = ("id",)
+    list_display = ("id", "name", "restaurant", "manager", "food_license_number")
+    search_fields = (
+        "id",
+        "name",
+        "restaurant__name",
+        "restaurant__owner__email",
+        "restaurant__owner__username",
+        "restaurant__owner__slug",
+        "manager__email",
+        "food_license_number"
+    )
+    raw_id_fields = (
+        "restaurant",
+        "manager",
+        "address"
+    )

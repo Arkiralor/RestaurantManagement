@@ -32,7 +32,7 @@ class NetworkUtils:
                 logger.info(f"Server IP Address:\t{ip_address}")
                 return ip_address
             except error as ex:
-                logger.warn(f"Socket error: {ex}")
+                logger.warning(f"Socket error: {ex}")
 
     @classmethod
     def add_to_allowed_hosts(cls):
@@ -42,7 +42,7 @@ class NetworkUtils:
         if not cls.DEBUG and not cls.ENV_TYPE == cls.SAFE_ENV:
             logger.info(
                 f"ENVIRONMENT TYPE: {cls.ENV_TYPE}; DEBUG: {cls.DEBUG}")
-            logger.warn("This script is only for development purposes.")
+            logger.warning("This script is only for development purposes.")
             return False
         try:
             allowed_hosts = getenv(cls.ENV_KEY)
